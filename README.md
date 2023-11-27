@@ -1,16 +1,17 @@
-# diabetes_predictor
+# diabetes_predictor app
 
-A new Flutter project.
+project for practice
 
-## Getting Started
+## About
 
-This project is a starting point for a Flutter application.
+This project is a practice project for ML
 
-A few resources to get you started if this is your first Flutter project:
+It integrates
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- ML : Tensorflow, Linear Regression, Supervised Learning
+- Pandas
+- Python
+- Flutter
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The Data: Trained on dataset from Pima indians obtained from kaggle (Search on Kaggle: Pima Indians Diabetes Database
+)

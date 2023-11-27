@@ -11,7 +11,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: MyForm(),
     );
-  }
 }
 
 class MyForm extends StatefulWidget {

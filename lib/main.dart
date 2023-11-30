@@ -1,109 +1,240 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyForm(), // This is where the error might be occurring
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
+      title: 'Diabetes Predictor',
+      home: MyForm(),
     );
   }
 }
 
 class MyForm extends StatefulWidget {
+  const MyForm({super.key});
+
   @override
   _MyFormState createState() => _MyFormState();
 }
 
 class _MyFormState extends State<MyForm> {
-  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  int? _children; // Use int? to allow for null
+  int? _glucose;
+  int? _bloodpressure;
+  int? _skinthickness;
+  int? _insulin;
+  int? _bmi;
+  int? _diabetespedigreefn;
+  int? _age;
 
-  @override
+  String predictionResult = '';
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      print('Children: $_children');
+      print('Glucose: $_glucose');
+      print('Blood Pressure: $_bloodpressure');
+      print('Skin Thickness: $_skinthickness');
+      print('Insulin: $_insulin');
+      print('BMI: $_bmi');
+      print('Diabetes Pedigree Function: $_diabetespedigreefn');
+      print('Age: $_age');
+
+      // Call the makePrediction function with the collected data
+      makePrediction();
+    }
+  }@override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Diabetes Predictor'),
+        title: const Text('Check now!'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: FormBuilder(
-          key: _formKey,
+      body: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
-            children: [
-              FormBuilderTextField(
-                name: 'children',
-                decoration: const InputDecoration(labelText: 'Children'),
-                keyboardType: TextInputType.number,
-                validator: FormBuilderValidators.numeric(context),
-              ),
-              FormBuilderTextField(
-                name: 'glucose',
-                decoration: const InputDecoration(labelText: 'Glucose'),
-                keyboardType: TextInputType.number,
-                validator: FormBuilderValidators.numeric(context),
-              ),
-              FormBuilderTextField(
-                name: 'bloodPressure',
-                decoration: InputDecoration(labelText: 'Blood Pressure'),
-                keyboardType: TextInputType.number,
-                validator: FormBuilderValidators.numeric(context),
-              ),
-              FormBuilderTextField(
-                name: 'skinThickness',
-                decoration: InputDecoration(labelText: 'Skin Thickness'),
-                keyboardType: TextInputType.number,
-                validator: FormBuilderValidators.numeric(context),
-              ),
-              FormBuilderTextField(
-                name: 'insulin',
-                decoration: InputDecoration(labelText: 'Insulin'),
-                keyboardType: TextInputType.number,
-                validator: FormBuilderValidators.numeric(context),
-              ),
-              FormBuilderTextField(
-                name: 'bmi',
-                decoration: InputDecoration(labelText: 'BMI'),
-                keyboardType: TextInputType.number,
-                validator: FormBuilderValidators.numeric(context),
-              ),
-              FormBuilderTextField(
-                name: 'diabetesPedigreeFunction',
-                decoration:
-                    InputDecoration(labelText: 'Diabetes Pedigree Function'),
-                keyboardType: TextInputType.number,
-                validator: FormBuilderValidators.numeric(context),
-              ),
-              FormBuilderTextField(
-                name: 'age',
-                decoration: InputDecoration(labelText: 'Age'),
-                keyboardType: TextInputType.number,
-                validator: FormBuilderValidators.numeric(context),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                key: Key('predict_button'),
-                onPressed: () {
-                  if (_formKey.currentState!.saveAndValidate()) {
-                    // Access the form data
-                    Map<String, dynamic> formData =
-                        _formKey.currentState!.value;
-                    // Use the form data as needed, e.g., pass it to your ML model
-                    print(formData);
+            children: <Widget>[
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Children',
+                ),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter number of children.';
                   }
+                  return null;
                 },
-                child: Text('Predict'),
+                onSaved: (value) {
+                  _children = int.tryParse(value!);
+                },
               ),
-            ], // Corrected indentation
-              // ... (rest of the FormBuilder content)
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Glucose'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter glucose level.';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _glucose = int.tryParse(value!);
+                },
+              ),
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Blood Pressure'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter blood pressure.';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _bloodpressure = int.tryParse(value!);
+                },
+              ),
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Skin Thickness'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter Skinthickness.';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _skinthickness = int.tryParse(value!);
+                },
+              ),
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'BMI'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter BMI.';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _bmi = int.tryParse(value!);
+                },
+              ),
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Insulin'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter Insulin.';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _insulin = int.tryParse(value!);
+                },
+              ),
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Diabetes Pedigree Function',
+                ),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter diabetes Pedigree Function';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _diabetespedigreefn = int.tryParse(value!);
+                },
+              ),
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Age'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter Age';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _age = int.tryParse(value!);
+                },
+              ),
+              const SizedBox(height: 20.0),
+              ElevatedButton(
+                onPressed: _submitForm,
+                child: const Text('Submit'),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> makePrediction() async {
+    // Prepare the features list
+    List<double> features = [
+      _children!.toDouble(),
+      _glucose!.toDouble(),
+      _bloodpressure!.toDouble(),
+      _skinthickness!.toDouble(),
+      _insulin!.toDouble(),
+      _bmi!.toDouble(),
+      _diabetespedigreefn!.toDouble(),
+      _age!.toDouble(),
+    ];
+
+    // Make a POST request to the server with the features
+    final response = await http.post(
+      Uri.parse('YOUR_SERVER_ENDPOINT'), // Replace with your server endpoint
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({'features': features}),
+    );
+
+    // Parse the response
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+      setState(() {
+        predictionResult = 'Prediction: ${data['prediction']}';
+      });
+      // Display the prediction result in a dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Prediction Result'),
+            content: Text(predictionResult),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      setState(() {
+        predictionResult = 'Error';
+      });
+    }
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
   }
 }

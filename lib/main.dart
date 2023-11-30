@@ -214,7 +214,7 @@ class _MyFormState extends State<MyForm> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Prediction Result'),
+            title: Text('Prediction Result'),
             content: Text(predictionResult),
             actions: [
               TextButton(

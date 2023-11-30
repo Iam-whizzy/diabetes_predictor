@@ -55,7 +55,9 @@ class _MyFormState extends State<MyForm> {
       // Call the makePrediction function with the collected data
       makePrediction();
     }
-  }@override
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -230,11 +232,5 @@ class _MyFormState extends State<MyForm> {
         predictionResult = 'Error';
       });
     }
-  }
-  
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
   }
 }

@@ -1,59 +1,55 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-void main() => runApp(const MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      title: 'Diabetes Predictor',
       home: MyForm(),
     );
   }
 }
 
 class MyForm extends StatefulWidget {
-  const MyForm({super.key});
-
   @override
   _MyFormState createState() => _MyFormState();
 }
 
 class _MyFormState extends State<MyForm> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  int? _children; // Use int? to allow for null
-  int? _glucose;
-  int? _bloodpressure;
-  int? _skinthickness;
-  int? _insulin;
-  int? _bmi;
-  int? _diabetespedigreefn;
-  int? _age;
+  final TextEditingController childrenController = TextEditingController();
+  final TextEditingController glucoseController = TextEditingController();
+  final TextEditingController bpController = TextEditingController();
+  final TextEditingController stController = TextEditingController();
+  final TextEditingController insulinController = TextEditingController();
+  final TextEditingController bmiController = TextEditingController();
+  final TextEditingController dpfController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
 
-  String predictionResult = '';
+  void _submitForm() async {
+    final response = await http.post(
+      'http://127.0.0.1:5000/' as Uri,
+      body: {
+        'children': childrenController.text,
+        'glucose': glucoseController.text,
+        'bp': bpController.text,
+        'st': stController.text,
+        'insulin': insulinController.text,
+        'bmi': bmiController.text,
+        'dpf': dpfController.text,
+        'age': ageController.text,
+      },
+    );
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      print('Children: $_children');
-      print('Glucose: $_glucose');
-      print('Blood Pressure: $_bloodpressure');
-      print('Skin Thickness: $_skinthickness');
-      print('Insulin: $_insulin');
-      print('BMI: $_bmi');
-      print('Diabetes Pedigree Function: $_diabetespedigreefn');
-      print('Age: $_age');
-
-      // Call the makePrediction function with the collected data
-      makePrediction();
+    if (response.statusCode == 200) {
+      print('Server response: ${response.body}');
+      // Handle the response as needed
+    } else {
+      print('Failed to submit form. Server returned ${response.statusCode}');
+      // Handle the error as needed
     }
   }
 
@@ -61,176 +57,56 @@ class _MyFormState extends State<MyForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Check now!'),
+        title: const Text('Diabetes Predictor'),
       ),
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Children',
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter number of children.';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _children = int.tryParse(value!);
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Glucose'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter glucose level.';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _glucose = int.tryParse(value!);
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Blood Pressure'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter blood pressure.';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _bloodpressure = int.tryParse(value!);
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Skin Thickness'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter Skinthickness.';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _skinthickness = int.tryParse(value!);
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'BMI'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter BMI.';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _bmi = int.tryParse(value!);
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Insulin'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter Insulin.';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _insulin = int.tryParse(value!);
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Diabetes Pedigree Function',
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter diabetes Pedigree Function';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _diabetespedigreefn = int.tryParse(value!);
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Age'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter Age';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _age = int.tryParse(value!);
-                },
-              ),
-              const SizedBox(height: 20.0),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: const Text('Submit'),
-              ),
-            ],
-          ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // Your form fields go here
+            TextFormField(
+              controller: childrenController,
+              decoration: const InputDecoration(labelText: 'children'),
+            ),
+             TextFormField(
+              controller: glucoseController,
+              decoration: const InputDecoration(labelText: 'glucose'),
+            ),
+             TextFormField(
+              controller: bpController,
+              decoration: const InputDecoration(labelText: 'bp'),
+            ),
+             TextFormField(
+              controller: stController,
+              decoration: const InputDecoration(labelText: 'st'),
+            ),
+             TextFormField(
+              controller: insulinController,
+              decoration: const InputDecoration(labelText: 'insulin'),
+            ),
+            TextFormField(
+              controller: bmiController,
+              decoration: const InputDecoration(labelText: 'bmi'),
+            ),
+            TextFormField(
+              controller: dpfController,
+              decoration: const InputDecoration(labelText: 'dpf'),
+            ),
+            TextFormField(
+              controller: ageController,
+              decoration: const InputDecoration(labelText: 'age'),
+            ),
+            // Add other TextFormField widgets for other fields
+
+            const SizedBox(height: 16),
+
+            ElevatedButton(
+              onPressed: _submitForm,
+              child: const Text('Submit'),
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  Future<void> makePrediction() async {
-    // Prepare the features list
-    List<double> features = [
-      _children!.toDouble(),
-      _glucose!.toDouble(),
-      _bloodpressure!.toDouble(),
-      _skinthickness!.toDouble(),
-      _insulin!.toDouble(),
-      _bmi!.toDouble(),
-      _diabetespedigreefn!.toDouble(),
-      _age!.toDouble(),
-    ];
-
-    // Make a POST request to the server with the features
-    final response = await http.post(
-      Uri.parse('YOUR_SERVER_ENDPOINT'), // Replace with your server endpoint
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode({'features': features}),
-    );
-
-    // Parse the response
-    if (response.statusCode == 200) {
-      Map<String, dynamic> data = jsonDecode(response.body);
-      setState(() {
-        predictionResult = 'Prediction: ${data['prediction']}';
-      });
-      // Display the prediction result in a dialog
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Prediction Result'),
-            content: Text(predictionResult),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      setState(() {
-        predictionResult = 'Error';
-      });
-    }
   }
 }

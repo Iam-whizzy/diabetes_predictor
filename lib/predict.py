@@ -41,7 +41,6 @@ def predict():
         return jsonify({'outcome': str(condition[0])})
 
     else:
-        #return render_template('main.dart')
         return "This is the Predictor server response"
 
 if __name__ == '__main__':

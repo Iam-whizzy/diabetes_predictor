@@ -1,4 +1,4 @@
-# diabetes_predictor app
+# Diabetes Predictor App
 
 project for practice
 
@@ -8,9 +8,9 @@ This project is a practice project for ML
 
 It integrates
 
-- ML : Tensorflow, Linear Regression, Supervised Learning
+- ML : Gradient Boosting Classifier, Sklearn
 - Pandas
-- Python
+- Python Flask
 - Flutter
 
 The Data: Trained on dataset from Pima indians obtained from kaggle (Search on Kaggle: Pima Indians Diabetes Database

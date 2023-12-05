@@ -2,8 +2,12 @@ from flask import Flask, request, render_template
 import pandas as pd
 from sklearn import model_selection
 from sklearn.ensemble import GradientBoostingClassifier
+from flask import jsonify
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/', methods=['POST', 'GET'])
 def predict():
@@ -34,10 +38,11 @@ def predict():
         symptoms = [[children, glucose, bp, st, insulin, bmi, float(dpf), age]]
         condition = model.predict(symptoms)
 
-        return {'outcome': str(condition[0])}
+        return jsonify({'outcome': str(condition[0])})
 
     else:
-        return render_template('main.dart')
+        #return render_template('main.dart')
+        return "This is the Predictor server response"
 
 if __name__ == '__main__':
     app.run(debug=True)

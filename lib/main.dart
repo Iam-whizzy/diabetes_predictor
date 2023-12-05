@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -30,28 +32,37 @@ class _MyFormState extends State<MyForm> {
   final TextEditingController ageController = TextEditingController();
 
   void _submitForm() async {
-    final response = await http.post(
-      'http://127.0.0.1:5000/' as Uri,
-      body: {
-        'children': childrenController.text,
-        'glucose': glucoseController.text,
-        'bp': bpController.text,
-        'st': stController.text,
-        'insulin': insulinController.text,
-        'bmi': bmiController.text,
-        'dpf': dpfController.text,
-        'age': ageController.text,
-      },
-    );
+    print('Making HTTP request...');
 
-    if (response.statusCode == 200) {
-      print('Server response: ${response.body}');
-      // Handle the response as needed
-    } else {
-      print('Failed to submit form. Server returned ${response.statusCode}');
-      // Handle the error as needed
-    }
+  final response = await http.post(
+    Uri.parse('http://127.0.0.1:5000/'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      'children': childrenController.text,
+      'glucose': glucoseController.text,
+      'bp': bpController.text,
+      'st': stController.text,
+      'insulin': insulinController.text,
+      'bmi': bmiController.text,
+      'dpf': dpfController.text,
+      'age': ageController.text,
+    }),
+  );
+  print('HTTP response: ${response.statusCode} ${response.body}');
+
+
+  if (response.statusCode == 200) {
+    // Parse the JSON response from the server
+    final Map<String, dynamic> data = jsonDecode(response.body);
+    final String outcome = data['outcome'];
+
+    print('Server response: $outcome');
+    // Handle the outcome as needed
+  } else {
+    print('Failed to submit form. Server returned ${response.statusCode}');
+    // Handle the error as needed
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +74,7 @@ class _MyFormState extends State<MyForm> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Your form fields go here
+            // Form fields go here
             TextFormField(
               controller: childrenController,
               decoration: const InputDecoration(labelText: 'children'),
@@ -96,7 +107,7 @@ class _MyFormState extends State<MyForm> {
               controller: ageController,
               decoration: const InputDecoration(labelText: 'age'),
             ),
-            // Add other TextFormField widgets for other fields
+            
 
             const SizedBox(height: 16),
 

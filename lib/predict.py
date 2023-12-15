@@ -41,7 +41,7 @@ def predict():
         return jsonify({'outcome': str(condition[0])})
 
     else:
-        return "This is the Predictor server response"
+        return "Something is wrong!"
 
 if __name__ == '__main__':
     app.run(debug=True)

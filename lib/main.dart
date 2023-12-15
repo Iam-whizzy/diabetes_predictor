@@ -52,17 +52,47 @@ class _MyFormState extends State<MyForm> {
 
 
   if (response.statusCode == 200) {
-    // Parse the JSON response from the server
-    final Map<String, dynamic> data = jsonDecode(response.body);
-    final String outcome = data['outcome'];
-
-    print('Server response: $outcome');
-    // Handle the outcome as needed
-  } else {
-    print('Failed to submit form. Server returned ${response.statusCode}');
-    // Handle the error as needed
+      Map<String, dynamic> data = jsonDecode(response.body);
+      String outcome = data['outcome'];
+      // Handle the outcome as needed, e.g., display it in a dialog
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Prediction Outcome'),
+            content: Text('The predicted outcome is: $outcome'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // Handle the error
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to make a prediction. Please try again.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {

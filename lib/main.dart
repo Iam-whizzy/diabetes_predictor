@@ -54,13 +54,13 @@ class _MyFormState extends State<MyForm> {
   if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
       String outcome = data['outcome'];
-      // Handle the outcome as needed, e.g., display it in a dialog
+      // Handling the outcome as needed; displaying it as a popup
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: Text('Prediction Outcome'),
-            content: Text('The predicted outcome is: $outcome'),
+            content: Text('You are 75% likely to be: $outcome'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -73,7 +73,7 @@ class _MyFormState extends State<MyForm> {
         },
       );
     } else {
-      // Handle the error
+      // Handling the error
       showDialog(
         context: context,
         builder: (context) {
@@ -104,38 +104,38 @@ class _MyFormState extends State<MyForm> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Form fields go here
+            // Form fields
             TextFormField(
               controller: childrenController,
-              decoration: const InputDecoration(labelText: 'children'),
+              decoration: const InputDecoration(labelText: 'Number of Children'),
             ),
              TextFormField(
               controller: glucoseController,
-              decoration: const InputDecoration(labelText: 'glucose'),
+              decoration: const InputDecoration(labelText: 'Glucose Level'),
             ),
              TextFormField(
               controller: bpController,
-              decoration: const InputDecoration(labelText: 'bp'),
+              decoration: const InputDecoration(labelText: 'Blood Pressure'),
             ),
              TextFormField(
               controller: stController,
-              decoration: const InputDecoration(labelText: 'st'),
+              decoration: const InputDecoration(labelText: 'SkinThickness'),
             ),
              TextFormField(
               controller: insulinController,
-              decoration: const InputDecoration(labelText: 'insulin'),
+              decoration: const InputDecoration(labelText: 'Insulin Level'),
             ),
             TextFormField(
               controller: bmiController,
-              decoration: const InputDecoration(labelText: 'bmi'),
+              decoration: const InputDecoration(labelText: 'BMI'),
             ),
             TextFormField(
               controller: dpfController,
-              decoration: const InputDecoration(labelText: 'dpf'),
+              decoration: const InputDecoration(labelText: 'DiabetesPedigreeFunction'),
             ),
             TextFormField(
               controller: ageController,
-              decoration: const InputDecoration(labelText: 'age'),
+              decoration: const InputDecoration(labelText: 'Age'),
             ),
             
 

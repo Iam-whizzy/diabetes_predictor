@@ -23,7 +23,7 @@ def predict():
         model = GradientBoostingClassifier()
         model.fit(X_train, Y_train)
 
-        # Parse JSON data from Flutter app
+        # Parsing JSON data from Flutter app
         json_data = request.get_json()
         children = json_data['children']
         glucose = json_data['glucose']

@@ -14,10 +14,11 @@ It integrates
 - Flutter
 
 The Data: Trained on dataset from Pima indians obtained from kaggle (Search on Kaggle: Pima Indians Diabetes Database
-)
+
+https://github.com/Iam-whizzy/diabetes_predictor/assets/42470125/2343b090-67d4-4d8a-99fe-341770e391c1
 <table>
   <tr>
-<td>https://github.com/Iam-whizzy/diabetes_predictor/assets/42470125/2343b090-67d4-4d8a-99fe-341770e391c1</td>
+<td></td>
 
         <td>![2](https://github.com/Iam-whizzy/diabetes_predictor/assets/42470125/c7af2982-b05d-4aac-b3f3-1f537e94e14f)
 </td>

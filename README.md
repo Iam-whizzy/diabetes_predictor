@@ -1,4 +1,4 @@
-# Diabetes Predictor App
+# Diabetes Predictor App (75% Accurate)
 
 project for practice
 
@@ -13,7 +13,7 @@ It integrates
 - Python Flask
 - Flutter
 
-The Data: Trained on dataset from Pima indians obtained from kaggle (Search on Kaggle: Pima Indians Diabetes Database
+The Data: Trained on dataset from Pima indians obtained from kaggle (Search on Kaggle: Pima Indians Diabetes Database)
 
 Images of code after running: 
 

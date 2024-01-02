@@ -16,13 +16,9 @@ It integrates
 The Data: Trained on dataset from Pima indians obtained from kaggle (Search on Kaggle: Pima Indians Diabetes Database
 
 Images of code after running: 
-<table>
-  <tr>
-    <td>![Result Displayed](https://github.com/Iam-whizzy/diabetes_predictor/blob/main/2.jpeg)
-</td>
-    <td>![Inputing Values](https://github.com/Iam-whizzy/diabetes_predictor/blob/main/3.jpeg)
-</td>
-  </tr>
-</table>
+![Inputing Values](https://github.com/Iam-whizzy/diabetes_predictor/blob/main/3.jpeg)
+![Result Displayed](https://github.com/Iam-whizzy/diabetes_predictor/blob/main/2.jpeg)
+
+
 
 
